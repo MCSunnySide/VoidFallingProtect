@@ -1,0 +1,5 @@
+name: VoidFallingProtect
+version: ${project.version}
+main: com.mcsunnyside.voidfallingprotect.VoidFallingProtect
+api-version: 1.15
+description: Protect fell out of the world when teleporting or loggin in
