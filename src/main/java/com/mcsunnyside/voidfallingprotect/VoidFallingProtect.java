@@ -2,6 +2,7 @@ package com.mcsunnyside.voidfallingprotect;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -29,6 +30,9 @@ public final class VoidFallingProtect extends JavaPlugin implements Listener {
         if(event.getTo() == null){
             return;
         }
+        if(event.getPlayer().getGameMode() == GameMode.SPECTATOR){
+            return;
+        }
         if(event.getTo().getBlockY() >= 0){ //忽略玩家正常移动
             return;
         }
@@ -38,8 +42,10 @@ public final class VoidFallingProtect extends JavaPlugin implements Listener {
         if(!event.getFrom().getBlock().getType().isSolid()){ //忽略玩家通过不完整方块正常离开世界范围
             return;
         }
-        teleportToSafeLoc(event.getPlayer());
         event.setCancelled(true);
+        Bukkit.getScheduler().runTaskLater(this,()->{
+            teleportToSafeLoc(event.getPlayer());
+        },1);
     }
 
     public void teleportToSafeLoc(Player player){
