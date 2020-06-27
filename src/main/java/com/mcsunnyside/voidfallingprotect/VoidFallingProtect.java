@@ -43,6 +43,7 @@ public final class VoidFallingProtect extends JavaPlugin implements Listener {
     }
 
     public void teleportToSafeLoc(Player player){
+        getLogger().warning("Prevent player "+player.getName()+" fell out of the world.");
         player.sendMessage(ChatColor.YELLOW+"检测到不安全的移动，已传送你到安全的地点。");
         player.teleport(player.getWorld().getSpawnLocation());
     }
