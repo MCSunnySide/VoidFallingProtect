@@ -1,8 +1,6 @@
 package com.mcsunnyside.voidfallingprotect;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -30,16 +28,16 @@ public final class VoidFallingProtect extends JavaPlugin implements Listener {
         if(event.getTo() == null){
             return;
         }
-        if(event.getPlayer().getGameMode() == GameMode.SPECTATOR){
+        if (event.getPlayer().getGameMode() == GameMode.SPECTATOR) {
             return;
         }
-        if(event.getTo().getBlockY() >= 0){ //忽略玩家正常移动
+        if (event.getTo().getBlockY() >= 0) {
             return;
         }
-        if(event.getFrom().getBlockY() < 0){ //忽略玩家已经在低处移动
+        if (event.getFrom().getBlockY() < 0) {
             return;
         }
-        if(!event.getFrom().getBlock().getType().isSolid()){ //忽略玩家通过不完整方块正常离开世界范围
+        if (!event.getFrom().getBlock().getType().isSolid()) {
             return;
         }
         event.setCancelled(true);
@@ -48,9 +46,22 @@ public final class VoidFallingProtect extends JavaPlugin implements Listener {
         },1);
     }
 
-    public void teleportToSafeLoc(Player player){
-        getLogger().warning("Prevent player "+player.getName()+" fell out of the world.");
-        player.sendMessage(ChatColor.YELLOW+"检测到不安全的移动，已传送你到安全的地点。");
-        player.teleport(player.getWorld().getSpawnLocation());
+    public void teleportToSafeLoc(Player player) {
+        getLogger().warning("Prevent player " + player.getName() + " fell out of the world.");
+        Location location = player.getLocation();
+        boolean safeFound = true;
+        while (location.getBlock().getType() != Material.AIR || location.add(0, 1, 0).getBlock().getType() != Material.AIR) {
+            if (location.getBlockY() > 254) {
+                safeFound = false;
+                break;
+            }
+            location = location.add(0, 1, 0);
+        }
+        if (safeFound) {
+            player.teleport(location);
+        } else {
+            player.teleport(player.getWorld().getSpawnLocation());
+        }
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', getConfig().getString("message", "Unsafe movement detected, we teleport you to a safe location to avoid you drop into the void!")));
     }
 }
