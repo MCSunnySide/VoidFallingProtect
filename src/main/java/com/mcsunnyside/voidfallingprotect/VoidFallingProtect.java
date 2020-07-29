@@ -41,9 +41,7 @@ public final class VoidFallingProtect extends JavaPlugin implements Listener {
             return;
         }
         event.setCancelled(true);
-        Bukkit.getScheduler().runTaskLater(this,()->{
-            teleportToSafeLoc(event.getPlayer());
-        },1);
+        Bukkit.getScheduler().runTaskLater(this, () -> teleportToSafeLoc(event.getPlayer()), 1);
     }
 
     public void teleportToSafeLoc(Player player) {
